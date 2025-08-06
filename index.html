@@ -1071,7 +1071,7 @@
             const savingsElement = document.getElementById('savingsDisplay');
             if (savingsPercentage > 0) {
                 // CLEAN SAVINGS DISPLAY WITH DOLLAR SIGN
-                savingsElement.textContent = `${Math.round(savingsAmount).toLocaleString()} saving! (${savingsPercentage}%)`;
+                savingsElement.textContent = `$${Math.round(savingsAmount).toLocaleString()} saving! (${savingsPercentage}%)`;
                 savingsElement.style.display = 'block';
             } else {
                 savingsElement.style.display = 'none';
