@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Production Estimator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffcbc1 0%, #ff8a65 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.2;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            margin-bottom: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .logo-image {
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .main-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 36px;
+        }
+
+        .secondary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            align-items: start;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #ffcbc1, #ffb3a7);
+            border-radius: 40px;
+            padding: 35px 30px;
+            position: relative;
+            transition: all 0.4s ease;
+            min-height: 280px;
+        }
+
+        .card.yellow {
+            background: linear-gradient(145deg, #fcca0f, #f4c430);
+        }
+
+        /* GREEN CARD WITH PULSATING GLOW */
+        .card.green {
+            background: linear-gradient(145deg, #1da775, #16a085);
+            min-height: 600px;
+            animation: greenCardGlow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes greenCardGlow {
+            0%, 100% { 
+                box-shadow: 0 0 30px rgba(29, 167, 117, 0.4),
+                           0 0 60px rgba(29, 167, 117, 0.2),
+                           0 10px 40px rgba(0, 0, 0, 0.1); 
+            }
+            50% { 
+                box-shadow: 0 0 50px rgba(29, 167, 117, 0.8),
+                           0 0 100px rgba(29, 167, 117, 0.4),
+                           0 15px 50px rgba(0, 0, 0, 0.15); 
+            }
+        }
+
+        .card.extras {
+            min-height: 600px;
+        }
+
+        .card-title {
+            font-size: 25px;
+            font-weight: 700;
+            color: #94331f;
+            margin-bottom: 20px;
+            letter-spacing: -1.25px;
+        }
+
+        .card.yellow .card-title,
+        .card.yellow .tip-text {
+            color: #8b6914;
+        }
+
+        .card.green .card-title {
+            color: #aae5d0;
+        }
+
+        /* SIMPLE SLIDER */
+        .slider-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .slider-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .slider-btn {
+            background: rgba(255, 100, 68, 0.2);
+            color: #94331f;
+            border: 2px solid #ff6444;
+            border-radius: 20px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .slider-btn.active {
+            background: #ff6444;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .slider-btn:hover {
+            background: #ff6444;
+            color: white;
+        }
+
+        .slider-value {
+            font-size: 40px;
+            font-weight: 700;
+            color: #94331f;
+            margin-bottom: 10px;
+        }
+
+        .slider-subtext {
+            font-size: 18px;
+            color: #94331f;
+            opacity: 0.8;
+        }
+
+        /* BUTTONS */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6444, #ff8a65);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+            box-shadow: 0 4px 15px rgba(255, 100, 68, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 100, 68, 0.5);
+        }
+
+        .btn.selected {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn.selected::after {
+            content: ' ✓';
+            font-weight: bold;
+        }
+
+        /* INPUT */
+        .days-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 20px;
+        }
+
+        .days-label {
+            font-size: 22px;
+            font-weight: 600;
+            color: #94331f;
+        }
+
+        .days-input {
+            background: linear-gradient(135deg, #ff6444, #ff8a65);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            width: 90px;
+            text-align: center;
+        }
+
+        .days-input:focus {
+            outline: none;
+            box-shadow: 0 8px 25px rgba(255, 100, 68, 0.6);
+        }
+
+        /* COST DISPLAY */
+        .cost-display {
+            background: linear-gradient(145deg, #aae5d0, #85d4b8);
+            border-radius: 25px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(29, 167, 117, 0.2);
+        }
+
+        /* SUBSCRIPTION COST PULSATION */
+        .cost-display.subscription {
+            animation: subscriptionPulse 2.5s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes subscriptionPulse {
+            0%, 100% { 
+                box-shadow: 0 8px 25px rgba(29, 167, 117, 0.3),
+                           0 0 25px rgba(170, 229, 208, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 15px 40px rgba(29, 167, 117, 0.6),
+                           0 0 40px rgba(170, 229, 208, 0.8);
+                transform: scale(1.03);
+            }
+        }
+
+        .cost-amount {
+            font-size: 56px;
+            font-weight: 700;
+            color: #1da775;
+            line-height: 1;
+        }
+
+        .cost-small {
+            font-size: 36px;
+        }
+
+        .cost-amount::before {
+            content: '$';
+            font-size: 0.7em;
+            vertical-align: top;
+        }
+
+        .savings {
+            color: #fcca0f;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 12px 0;
+            text-align: center;
+        }
+
+        .subscription-info {
+            color: #aae5d0;
+            font-size: 14px;
+            margin: 8px 0;
+            line-height: 1.2;
+        }
+
+        .chat-btn {
+            background: linear-gradient(135deg, #aae5d0, #85d4b8);
+            color: #1da775;
+            border: none;
+            border-radius: 25px;
+            padding: 16px 30px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(29, 167, 117, 0.3);
+        }
+
+        .chat-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(29, 167, 117, 0.5);
+        }
+
+        /* TIP TEXT WITH ROTATION ANIMATION */
+        .tip-text {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.4;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            border-left: 4px solid #f4c430;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            cursor: pointer;
+        }
+
+        .tip-text:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .tip-text.fade-out {
+            opacity: 0;
+            transform: translateY(-15px);
+        }
+
+        .selection-counter {
+            background: rgba(255, 100, 68, 0.1);
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6444;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .main-cards,
+            .secondary-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .cost-amount {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="public/easyestimate.png" alt="Easy Estimate Logo" class="logo-image">
+        </div>
+
+        <!-- Top Row Cards -->
+        <div class="main-cards">
+            <!-- Video Duration Card -->
+            <div class="card">
+                <div class="card-title">Video duration?</div>
+                <div class="slider-container">
+                    <div class="slider-buttons">
+                        <button class="slider-btn active" onclick="setDuration(60)">1min</button>
+                        <button class="slider-btn" onclick="setDuration(120)">2min</button>
+                        <button class="slider-btn" onclick="setDuration(180)">3min</button>
+                        <button class="slider-btn" onclick="setDuration(240)">4min</button>
+                        <button class="slider-btn" onclick="setDuration(300)">5min</button>
+                        <button class="slider-btn" onclick="setDuration(360)">6min</button>
+                        <button class="slider-btn" onclick="setDuration(420)">7min</button>
+                        <button class="slider-btn" onclick="setDuration(480)">8min</button>
+                        <button class="slider-btn" onclick="setDuration(540)">9min</button>
+                        <button class="slider-btn" onclick="setDuration(600)">10min</button>
+                    </div>
+                    <div class="slider-value" id="sliderValue">1min</div>
+                    <div class="slider-subtext" id="sliderSubtext">60 seconds</div>
+                </div>
+            </div>
+
+            <!-- What do we need to do Card -->
+            <div class="card">
+                <div class="card-title">What do we need to do?</div>
+                <div class="button-group">
+                    <button class="btn" onclick="selectService(this, 'shoot-edit')">Shoot & edit</button>
+                    <button class="btn" onclick="selectService(this, 'shoot-only')">Shoot only</button>
+                    <button class="btn" onclick="selectService(this, 'edit-only')">Edit only</button>
+                    <button class="btn" onclick="selectService(this, 'photography')">Photography</button>
+                    <button class="btn" onclick="selectService(this, 'animation')">Animation</button>
+                </div>
+                <div class="selection-counter" id="serviceCounter">Select your main service</div>
+            </div>
+
+            <!-- Location Duration Card -->
+            <div class="card">
+                <div class="card-title">How long do we need to be on location?</div>
+                <div class="button-group">
+                    <button class="btn" onclick="selectLocation(this, 3)">3 hours</button>
+                    <button class="btn" onclick="selectLocation(this, 5)">5 hours</button>
+                    <button class="btn" onclick="selectLocation(this, 10)">10 hours</button>
+                </div>
+                <div class="days-container">
+                    <div class="days-label">Days?</div>
+                    <input type="number" class="days-input" id="daysInput" value="1" min="1" max="30" onchange="updateCosts()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row Cards -->
+        <div class="secondary-cards">
+            <!-- Column 1: Output formats and Tips -->
+            <div style="display: flex; flex-direction: column; gap: 25px;">
+                <div class="card">
+                    <div class="card-title">Need more than one output?</div>
+                    <div class="button-group">
+                        <button class="btn" onclick="toggleFormat(this, '16x9')">16x9</button>
+                        <button class="btn" onclick="toggleFormat(this, '9x16')">9x16</button>
+                        <button class="btn" onclick="toggleFormat(this, '1x1')">1x1</button>
+                    </div>
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button class="btn" onclick="toggleFormat(this, 'raw')">Supply RAW footage</button>
+                    </div>
+                    <div class="selection-counter" id="formatCounter">0 formats selected</div>
+                </div>
+
+                <div class="card yellow">
+                    <div class="tip-text" id="tipText" onclick="rotateTip()">Did you know that spending 1 hour on pre-production saves 3 hours on a video production?</div>
+                </div>
+            </div>
+
+            <!-- Column 2: Extras -->
+            <div class="card extras">
+                <div class="card-title">Do you need some extras?</div>
+                <div class="button-group">
+                    <button class="btn" onclick="toggleExtra(this, 'drone')">drone</button>
+                    <button class="btn" onclick="toggleExtra(this, 'storyboards')">storyboards</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn" onclick="toggleExtra(this, 'motion-graphics')">motion graphics</button>
+                    <button class="btn" onclick="toggleExtra(this, '2d-animation')">2D animation</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn" onclick="toggleExtra(this, 'script-assistance')">Script assistance</button>
+                    <button class="btn" onclick="toggleExtra(this, '3d-animation')">3D animation</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn" onclick="toggleExtra(this, 'studio')">studio</button>
+                    <button class="btn" onclick="toggleExtra(this, 'teleprompter')">teleprompter</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn" onclick="toggleExtra(this, 'voice-over')">voice over</button>
+                    <button class="btn" onclick="toggleExtra(this, 'music')">music</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn" onclick="toggleExtra(this, 'captions')">captions</button>
+                </div>
+                <div class="selection-counter" id="extrasCounter">0 extras selected</div>
+            </div>
+
+            <!-- Column 3: Cost Display -->
+            <div class="card green">
+                <div class="card-title">Average bespoke cost</div>
+                <div class="cost-display cost-small">
+                    <div class="cost-amount cost-small" id="approxCost">0</div>
+                </div>
+                <div class="subscription-info">Based on average production costs in New Zealand</div>
+                
+                <div class="card-title" style="margin-top: 30px;">Cost on subscription</div>
+                <div class="cost-display subscription">
+                    <div class="cost-amount" id="subscriptionCost">0</div>
+                </div>
+                <div class="savings" id="savingsDisplay" style="display: none;">$0 saving!</div>
+                <div class="subscription-info">Based on subscription pricing model</div>
+                
+                <button class="chat-btn" onclick="window.open('https://lp.videotaxi.co.nz/vt-pro/booking/v1', '_blank')">
+                    Let's chat!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GLOBAL STATE
+        let currentSeconds = 60;
+        let selectedService = null;
+        let selectedLocation = null;
+        let selectedFormats = new Set();
+        let selectedExtras = new Set();
+
+        // DURATION DATA
+        const durations = {
+            60: { display: "1min", subtext: "60 seconds" },
+            120: { display: "2min", subtext: "120 seconds" },
+            180: { display: "3min", subtext: "180 seconds" },
+            240: { display: "4min", subtext: "240 seconds" },
+            300: { display: "5min", subtext: "300 seconds" },
+            360: { display: "6min", subtext: "360 seconds" },
+            420: { display: "7min", subtext: "420 seconds" },
+            480: { display: "8min", subtext: "480 seconds" },
+            540: { display: "9min", subtext: "540 seconds" },
+            600: { display: "10min", subtext: "600 seconds" }
+        };
+
+        // TIP ROTATION SYSTEM - 10 TIPS
+        const videoTips = [
+            "Did you know that spending 1 hour on pre-production saves 3 hours on a video production?",
+            "Did you know that natural lighting can save up to 50% of your production time?",
+            "Did you know that having a shot list reduces filming time by 40%?",
+            "Did you know that recording audio separately improves quality by 80%?",
+            "Did you know that B-roll footage makes videos 70% more engaging?",
+            "Did you know that shorter videos have 90% higher completion rates?",
+            "Did you know that vertical videos get 13x more shares than landscape videos?",
+            "Did you know that videos with captions are watched 12% longer?",
+            "Did you know that the first 3 seconds determine if viewers will continue watching?",
+            "Did you know that consistent branding increases video recall by 85%?"
+        ];
+
+        let currentTipIndex = 0;
+
+        function rotateTip() {
+            const tipElement = document.getElementById('tipText');
+            console.log('🔄 Rotating tip to index:', (currentTipIndex + 1) % videoTips.length);
+            
+            // Fade out
+            tipElement.classList.add('fade-out');
+            
+            setTimeout(() => {
+                // Change text
+                currentTipIndex = (currentTipIndex + 1) % videoTips.length;
+                tipElement.textContent = videoTips[currentTipIndex];
+                
+                // Fade in
+                tipElement.classList.remove('fade-out');
+            }, 500);
+        }
+
+        // DURATION SELECTION
+        function setDuration(seconds) {
+            console.log('✅ Duration selected:', seconds);
+            currentSeconds = seconds;
+            
+            // Update display
+            document.getElementById('sliderValue').textContent = durations[seconds].display;
+            document.getElementById('sliderSubtext').textContent = durations[seconds].subtext;
+            
+            // Update button states
+            document.querySelectorAll('.slider-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateCosts();
+        }
+
+        // SERVICE SELECTION (single select)
+        function selectService(button, serviceType) {
+            console.log('✅ Service selected:', serviceType);
+            
+            // Remove selection from all service buttons
+            document.querySelectorAll('.card .btn').forEach(btn => {
+                if (btn.onclick && btn.onclick.toString().includes('selectService')) {
+                    btn.classList.remove('selected');
+                }
+            });
+            
+            // Select this button
+            button.classList.add('selected');
+            selectedService = serviceType;
+            
+            // Update counter
+            document.getElementById('serviceCounter').textContent = `✓ ${button.textContent} selected`;
+            
+            updateCosts();
+        }
+
+        // LOCATION SELECTION (single select)
+        function selectLocation(button, hours) {
+            console.log('✅ Location selected:', hours, 'hours');
+            
+            // Remove selection from all location buttons
+            document.querySelectorAll('.card .btn').forEach(btn => {
+                if (btn.onclick && btn.onclick.toString().includes('selectLocation')) {
+                    btn.classList.remove('selected');
+                }
+            });
+            
+            // Select this button
+            button.classList.add('selected');
+            selectedLocation = hours;
+            
+            updateCosts();
+        }
+
+        // FORMAT SELECTION (multi-select)
+        function toggleFormat(button, formatType) {
+            console.log('✅ Format toggled:', formatType);
+            
+            if (selectedFormats.has(formatType)) {
+                selectedFormats.delete(formatType);
+                button.classList.remove('selected');
+            } else {
+                selectedFormats.add(formatType);
+                button.classList.add('selected');
+            }
+            
+            // Update counter
+            document.getElementById('formatCounter').textContent = `${selectedFormats.size} format${selectedFormats.size !== 1 ? 's' : ''} selected`;
+            
+            updateCosts();
+        }
+
+        // EXTRAS SELECTION (multi-select)
+        function toggleExtra(button, extraType) {
+            console.log('✅ Extra toggled:', extraType);
+            
+            if (selectedExtras.has(extraType)) {
+                selectedExtras.delete(extraType);
+                button.classList.remove('selected');
+            } else {
+                selectedExtras.add(extraType);
+                button.classList.add('selected');
+            }
+            
+            // Update counter
+            document.getElementById('extrasCounter').textContent = `${selectedExtras.size} extra${selectedExtras.size !== 1 ? 's' : ''} selected`;
+            
+            updateCosts();
+        }
+
+        // COST CALCULATION
+        function updateCosts() {
+            console.log('💰 Updating costs...');
+
+            let approxCost = 0;
+            let subscriptionCost = 0;
+            const days = parseInt(document.getElementById('daysInput').value) || 1;
+
+            // Get duration index (0-9 for 1min-10min)
+            const durationSeconds = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600];
+            const durationIndex = durationSeconds.indexOf(currentSeconds);
+            
+            // Get location index (0-2 for 3h, 5h, 10h)
+            const locationHours = [3, 5, 10];
+            const locationIndex = selectedLocation ? locationHours.indexOf(selectedLocation) : -1;
+
+            // SERVICE COSTS
+            if (selectedService) {
+                if (selectedService === 'shoot-edit') {
+                    const approxShootCosts = [1500, 1500, 3000];
+                    const approxEditCosts = [1250, 2500, 3750, 5000, 6250, 7500, 8750, 10000, 11250, 12500];
+                    
+                    if (locationIndex >= 0) approxCost += approxShootCosts[locationIndex];
+                    approxCost += approxEditCosts[durationIndex];
+                    
+                    const subShootCosts = [1240, 1240, 2480];
+                    const subEditCosts = [1240, 2480, 3720, 4960, 6200, 7440, 8680, 9920, 11160, 12400];
+                    
+                    if (locationIndex >= 0) subscriptionCost += subShootCosts[locationIndex];
+                    subscriptionCost += subEditCosts[durationIndex];
+                    
+                } else if (selectedService === 'shoot-only') {
+                    const approxShootCosts = [1500, 1500, 3000];
+                    const subShootCosts = [1240, 1240, 2480];
+                    
+                    if (locationIndex >= 0) {
+                        approxCost += approxShootCosts[locationIndex];
+                        subscriptionCost += subShootCosts[locationIndex];
+                    }
+                    
+                } else if (selectedService === 'edit-only') {
+                    const approxEditCosts = [1250, 2500, 3750, 5000, 6250, 7500, 8750, 10000, 11250, 12500];
+                    approxCost += approxEditCosts[durationIndex];
+                    
+                    // Edit subscription: 3 hours per minute @ $248/hour
+                    const editHours = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30];
+                    subscriptionCost += editHours[durationIndex] * 248;
+                    
+                } else if (selectedService === 'photography') {
+                    const approxPhotoCosts = [1500, 1500, 3000];
+                    const subPhotoCosts = [1240, 1240, 2480];
+                    
+                    if (locationIndex >= 0) {
+                        approxCost += approxPhotoCosts[locationIndex];
+                        subscriptionCost += subPhotoCosts[locationIndex];
+                    }
+                    
+                } else if (selectedService === 'animation') {
+                    const approxAnimationCosts = [3500, 7000, 10500, 14000, 17500, 21000, 24500, 28000, 31500, 35000];
+                    const subAnimationCosts = [2480, 4960, 7440, 9920, 12400, 14880, 17360, 19840, 22320, 24800];
+                    
+                    approxCost += approxAnimationCosts[durationIndex];
+                    subscriptionCost += subAnimationCosts[durationIndex];
+                }
+            }
+
+            // FORMAT COSTS (free on subscription)
+            const approxFormatCosts = [250, 300, 350, 400, 450, 500, 550, 600, 650, 700];
+            selectedFormats.forEach(format => {
+                approxCost += approxFormatCosts[durationIndex];
+                // Free on subscription
+            });
+
+            // EXTRAS COSTS
+            selectedExtras.forEach(extra => {
+                if (extra === 'drone') {
+                    const approxDroneCosts = [2250, 2250, 4500];
+                    const subDroneCosts = [1240, 1240, 2480];
+                    if (locationIndex >= 0) {
+                        approxCost += approxDroneCosts[locationIndex];
+                        subscriptionCost += subDroneCosts[locationIndex];
+                    }
+                } else if (extra === 'voice-over') {
+                    const approxVoiceCosts = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
+                    const subVoiceCosts = [248, 496, 744, 992, 1240, 1488, 1736, 1984, 2232, 2480];
+                    approxCost += approxVoiceCosts[durationIndex];
+                    subscriptionCost += subVoiceCosts[durationIndex];
+                } else if (extra === 'motion-graphics') {
+                    const approxMotionCosts = [1500, 3000, 4500, 6000, 7500, 9000, 10500, 12000, 13500, 15000];
+                    const subMotionCosts = [744, 1984, 2976, 3720, 4960, 5952, 6944, 7936, 8928, 9920];
+                    approxCost += approxMotionCosts[durationIndex];
+                    subscriptionCost += subMotionCosts[durationIndex];
+                } else if (extra === 'teleprompter') {
+                    const approxTeleprompterCosts = [200, 200, 200];
+                    if (locationIndex >= 0) {
+                        approxCost += approxTeleprompterCosts[locationIndex];
+                        // Free on subscription
+                    }
+                } else if (extra === 'music') {
+                    const approxMusicCosts = [250, 250, 350, 350, 400, 450, 500, 550, 600, 650];
+                    approxCost += approxMusicCosts[durationIndex];
+                    // Free on subscription
+                } else if (extra === 'storyboards') {
+                    const approxStoryboardCosts = [1250, 2000, 2500, 3000, 4000, 4800, 5600, 6400, 7200, 8000];
+                    const subStoryboardCosts = [1250, 2000, 2500, 3000, 4000, 4800, 5600, 6400, 7200, 8000];
+                    approxCost += approxStoryboardCosts[durationIndex];
+                    subscriptionCost += subStoryboardCosts[durationIndex];
+                } else if (extra === '2d-animation') {
+                    const approx2DCosts = [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000, 30000];
+                    const sub2DCosts = [1984, 4216, 6200, 7440, 9920, 11904, 13888, 15872, 17856, 19840];
+                    approxCost += approx2DCosts[durationIndex];
+                    subscriptionCost += sub2DCosts[durationIndex];
+                } else if (extra === '3d-animation') {
+                    const approx3DCosts = [3500, 7000, 10500, 14000, 17500, 21000, 24500, 28000, 31500, 35000];
+                    const sub3DCosts = [1240, 3720, 6200, 8680, 9920, 11904, 13888, 15872, 17856, 19840];
+                    approxCost += approx3DCosts[durationIndex];
+                    subscriptionCost += sub3DCosts[durationIndex];
+                } else if (extra === 'captions') {
+                    const approxCaptionsCosts = [250, 250, 350, 350, 450, 500, 550, 600, 650, 700];
+                    const subCaptionsCosts = [248, 248, 248, 248, 248, 248, 248, 248, 248, 248];
+                    approxCost += approxCaptionsCosts[durationIndex];
+                    subscriptionCost += subCaptionsCosts[durationIndex];
+                } else if (extra === 'script-assistance') {
+                    const approxScriptCosts = [250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500];
+                    const subScriptCosts = [248, 496, 744, 992, 1240, 1488, 1736, 1984, 2232, 2480];
+                    approxCost += approxScriptCosts[durationIndex];
+                    subscriptionCost += subScriptCosts[durationIndex];
+                } else if (extra === 'studio') {
+                    const approxStudioCosts = [800, 800, 1500];
+                    const subStudioCosts = [800, 800, 1500];
+                    if (locationIndex >= 0) {
+                        approxCost += approxStudioCosts[locationIndex];
+                        subscriptionCost += subStudioCosts[locationIndex];
+                    }
+                }
+            });
+
+            // Apply days multiplier
+            if (days > 1) {
+                approxCost *= days;
+                subscriptionCost *= days;
+            }
+
+            // Calculate savings
+            const savingsAmount = approxCost - subscriptionCost;
+            const savingsPercentage = approxCost > subscriptionCost && approxCost > 0 ? 
+                Math.round((savingsAmount / approxCost) * 100) : 0;
+
+            // Update display
+            document.getElementById('approxCost').textContent = Math.round(approxCost).toLocaleString();
+            document.getElementById('subscriptionCost').textContent = Math.round(subscriptionCost).toLocaleString();
+
+            const savingsElement = document.getElementById('savingsDisplay');
+            if (savingsPercentage > 0) {
+                savingsElement.textContent = `$${Math.round(savingsAmount).toLocaleString()} saving! (${savingsPercentage}%)`;
+                savingsElement.style.display = 'block';
+            } else {
+                savingsElement.style.display = 'none';
+            }
+        }
+
+        // Initialize app
+        console.log('🚀 App initialized with animations');
+        updateCosts();
+        
+        // Start tip rotation every 7 seconds
+        setInterval(rotateTip, 7000);
+        
+        console.log('✨ Tip rotation started - changes every 7 seconds');
+        console.log('✨ Green card pulsation active');
+        console.log('✨ Subscription cost highlighting active');
+    </script>
+</body>
+</html>
